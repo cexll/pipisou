@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>皮皮云盘搜索</title>
+  <link href="./public/bootstrap-3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet"  href="./public/css/index.css">
+  <script src="public/js/jquery.js"></script>
+  <script src="public/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+ 
+  <style>
+    #jiaZai{
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="container">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+          data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+      
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand">皮皮搜</a>
+      </div>
+
+      <div class="collapse navbar-collapse " id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="./index.html">首页 </a></li>
+          <li><a href="./addfree.html">添加分享</a></li>
+
+        </ul>
+
+
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="img-circle">
+    <img src="./public/image/log.jpg" alt="图标" width="70px" height="100px"
+      style="position: absolute;left: 45%;padding-top: 10px;">
+  </div>
+  <form action="./api.php"></form>
+  <div class="row container">
+    <div class="col-lg-12">
+      <div class="input-group">
+        <input id="api" type="text" class="form-control" placeholder="输入并搜索...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">云盘搜索</button>
+        </span>
+      </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+  </div><!-- /.row -->
+  <!-- 推荐搜索 -->
+  <div class="row container">
+    <div class="col-sm-12 col-md-12">
+      <div class="thumbnail">
+        <div class="caption">
+          快捷搜索:
+          <a title="网络工程师" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">网络工程师</a>
+          <a title="软件工程师" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">软件工程师</a>
+          <a title="信息系统集成" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">信息系统集成</a>
+          <a title="软件开发" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">软件开发</a>
+          <a title="学前教育" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">学前教育</a>
+          <a title="医学" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">护理</a>
+          <a title="设计师" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">设计师</a>
+          <a title="经济师" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">经济师</a>
+          <a title="普通话资料" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">普通话资料</a>
+          <a title="钢琴教程" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">钢琴教程</a>
+          <a title="PPT模板" class='btn' onclick="document.getElementById('api').value=this.innerHTML;">PPT模板</a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row container" id="wrapper" >
+      <!-- <base target="_blank" /> -->
+    <div class="col-sm-12 col-md-12">
+      <div class="thumbnail">
+
+        <div class="caption">
+          <table class="table">
+            <thead>
+              <tr>
+                <td>标题</td>
+                <td>提取码</td>
+                <td>时间</td>
+                <td>大小</td>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 渲染 -->
+  <div align="center" class="row container">
+    <div class="col-sm-12 col-md-12">
+      <button id="jiaZai" class="list-group-item" style="text-align: center">加载更多</button>
+  </div>
+  <div id="top">
+    <a  href="javascript:window.scrollTo(0,0)" title="回到顶端">回到顶部</a>
+  </div>
+  
+  </div>
+  
+
+<script>
+var arrdata = [];
+var pageindex = 0;
+
+$('.btn').on("click", function () {
+  pageindex = 1;
+  
+  if (document.getElementById('api').value.length === 0) {
+    alert('先输入点东西');
+    document.getElementById('api').focus();
+  } else {
+    getdata(function (data) {
+      $("tbody").empty();
+       arrdata = data.data;
+      arrdata.forEach(function (item, i) {
+        var str = "";
+        str += "<tr>";
+        str += "<td width='15px'><a target='_blank' href=" + item.linkUrl + " title=" + item.linkName + " >" + item.linkName + "</a></td><td>" + item.linkPasswd + "</td><td>" + item.linkData + "</td><td>" + item.size + "</td>";
+        str += '</tr>';
+        $('tbody').append(str);
+
+      });
+
+    });
+    $('#jiaZai').css('display','block')
+  }
+
+});
+
+
+function getdata(callback) {
+  $.ajax({
+    url: 'http://localhost:8080/link/get?link_name=' + $("input[ id='api']").val() + '&pageNum='+ pageindex,
+    type: 'GET',
+    data: {},
+    datType: 'jsonp',
+    processData: false,
+    
+    success: function (data) {
+      console.log(data.data);
+      if (data.data === "" || data.data == null) {
+        alert('皮皮搜暂时没有更多的数据,请明天再来看看吧!');
+      } else {
+        callback(data);
+
+      }
+    }
+  });
+}
+$('#jiaZai').on('click', function () {
+  pageindex++;
+  getdata(function (data) {
+    $("tbody").empty();
+    var xindata = data.data;
+    arrdata = arrdata.concat(xindata);
+    arrdata.forEach(function (item, i) {
+      var str = "";
+      str += " <tr>";
+      str += "<td width='15px'><a href=" + item.linkUrl + " title=" + item.linkName + " >" + item.linkName + "</a></td><td>" + item.linkPasswd + "</td><td>" + item.linkData + "</td><td>" + item.size + "</td>";
+      str += '</tr>';
+      $('tbody').append(str);
+      
+    });
+
+  });
+})
+</script> 
+</body>
+
+</html>

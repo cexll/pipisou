@@ -1,0 +1,19 @@
+.input-group {
+    padding-top: 130px;
+}
+.img-circle {
+    padding-top: 20px;
+}
+body { 
+    padding-bottom: 70px; 
+
+}
+
+td {
+    white-space:nowrap;overflow:hidden;text-overflow: ellipsis;
+}
+table{
+    table-layout:fixed;word-wrap:break-word;
+}
+
+

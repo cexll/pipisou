@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="MYSQLTables" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.FluentBuilderMethodsPlugin" />
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/linkinfo"
+                        userId=""
+                        password="">
+        </jdbcConnection>
+
+        <javaModelGenerator targetPackage="com.pipisou.pipisou.model"
+                            targetProject="./src/main/java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="com.pipisou.pipisou.mapper"
+                         targetProject="./src/main/resources/mapper">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="MIXEDMAPPER"
+                             targetPackage="com.pipisou.pipisou.mapper"
+                             targetProject="./src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <table tableName="linkinfo" domainObjectName="LinkInfo" >
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+            <columnOverride column="link_url" />
+            <columnOverride column="link_name" />
+            <columnOverride column="link_passwd" />
+            <columnOverride column="link_data" />
+            <columnOverride column="link_size" />
+        </table>
+        <table tableName="querynums" domainObjectName="QueryNums" >
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+            <columnOverride column="link_name" />
+            <columnOverride column="querynum" />
+        </table>
+    </context>
+</generatorConfiguration>
